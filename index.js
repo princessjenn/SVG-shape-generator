@@ -1,6 +1,6 @@
 
 const inquirer = require('inquirer');
-const SVG = require("./lib/svg");
+const SVG = require("./lib/SVG.js");
 const fs = require('fs');
 const { Circle, Triangle, Square } = require('./shapes');
 
