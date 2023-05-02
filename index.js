@@ -5,7 +5,8 @@ const fs = require('fs');
 const { Circle, Triangle, Square } = require('./shapes');
 
 
-const questions = [
+async function promptUser() {
+    const answers = await inquirer.prompt([
 
     {
         type: 'list',
@@ -18,10 +19,6 @@ const questions = [
       type: 'input',
       name: 'shapeColor',
       message: 'Type in a color, or hexadecimal number for color, that you want the shape to be:',
-      validate: (input) => {
-        // any custom validation rules for shape color input
-        return true;
-        }
     },
 
     {
@@ -42,16 +39,55 @@ const questions = [
       type: 'input',
       name: 'textColor',
       message: 'Type in a color, or hexadecimal number for color, that you want the text inside to be:',
-      validate: (input) => {
-        // Add any custom validation rules for text color input
-        return true;
-      },
-    }];
+    },
+    ]);
 
 
+  let shape; //This sets the 'shape' variable and assigns the value as undefined.
+
+  switch (answers.shape) {
+    case 'Circle':
+      shape = new Circle();
+      break;
+    case 'Triangle':
+      shape = new Triangle();
+      break;
+    case 'Square':
+      shape = new Square();
+      break;
+  }
+// This switch statement takes the value of the 'shape' property from the 'answers' OBJECT (from the user's input using Inquirer),
+// and then assigns a new instance of the appropriate shape class (Circle, Triangle, or Square) to the 'shape' variable based on the value of 'answers.shape'.
+//if the user selected 'Circle', this switch statement will create a NEW INSTANCE of the 'Circle' class and assign it to the 'shape' variable.
+
+  shape.setColor(answers.shapeColor);
+  //sets the color of the shape based on the input for 'shapeColor'
+
+  return {
+    text: answers.text,
+    textColor: answers.textColor,
+    shape: shape,
+  };
+  //returns an object with 'text', 'textColor', and 'shape'. The 'text' and 'textColor' properties are taken from the input,
+  // and the 'shape' property is the 'shape' variable that was set in the switch statement.
+  //
+  //This will return an object with the user's input values for text, textColor, and shape when the promptUser() function is called, which can then be used to generate the SVG file.
+}
+
+  (async () => {
+    const userInput = await promptUser();
+    console.log(userInput);
+
+    const svg = new SVG(300, 200);
+    svg.drawShape(userInput.shape, userInput.shapeColor);
+    svg.drawText(userInput.text, userInput.textColor);
+    const markUp = svg.getMarkUp();
+ 
 
 //SVG file
-fs.writeFile("logo.svg", example.markUp,(err) => {
+fs.writeFile("logo.svg", markUp, (err) => {
     if (err) throw err;
     console.log('Generated logo.svg');
 });
+
+}) ();
