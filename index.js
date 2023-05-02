@@ -5,8 +5,11 @@ const fs = require('fs');
 const { Circle, Triangle, Square } = require('./shapes');
 
 
-async function promptUser() {
-    const answers = await inquirer.prompt([
+async function promptUser() { //This function returns a Promise that will resolve with the user's input answers to the Inquirer prompts.
+    const answers = await inquirer.prompt([ 
+//The value of the user's answers to the prompts returned by the inquirer.prompt() method.
+//The await keyword ensures that the const answers line doesn't execute until the user has provided their answers to the prompts,
+//and the promise returned by inquirer.prompt() has been resolved.
 
     {
         type: 'list',
